@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Presupuestos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Generador de Presupuestos</h1>
+        
+        <div class="form-container">
+            <div class="input-group">
+                <input type="text" id="productId" placeholder="ID del producto" required>
+                <input type="number" id="quantity" value="1" min="1" placeholder="Cantidad">
+                <button id="addProduct">Añadir Producto</button>
+            </div>
+        </div>
+
+        <div class="products-list">
+            <h2>Productos Añadidos</h2>
+            <div id="addedProducts"></div>
+        </div>
+
+        <button id="generateQuote" class="primary-button">Generar Presupuesto</button>
+
+        <div class="quote-container">
+            <h2>Presupuesto</h2>
+            <div id="quoteResult"></div>
+        </div>
+    </div>
+    <script src="productos_escoda.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
