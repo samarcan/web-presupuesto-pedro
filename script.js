@@ -8,7 +8,7 @@ if (typeof productos === 'undefined') {
 
 // Add product to the list
 document.getElementById('addProduct').addEventListener('click', () => {
-    const productId = document.getElementById('productId').value.trim();
+    const productId = document.getElementById('productId').value.trim().toUpperCase();
     const quantity = parseInt(document.getElementById('quantity').value);
 
     if (!productId) {
