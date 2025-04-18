@@ -85,23 +85,26 @@ button:hover {
 }
 
 .product-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
     padding: 10px;
     background-color: #f8f9fa;
     border-radius: 4px;
-}
-
-.product-info {
-    display: flex;
-    gap: 20px;
     align-items: center;
 }
 
+.product-info {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 20px;
+    align-items: center;
+    justify-content: end;
+}
+
 .product-name {
-    flex: 1;
-    margin-right: 20px;
+    word-break: break-word;
+    padding-right: 10px;
 }
 
 .product-name.editable {
@@ -203,20 +206,24 @@ embed {
     }
     
     .product-item {
-        flex-direction: column;
-        gap: 10px;
-        text-align: center;
+        grid-template-columns: 1fr;
     }
     
     .product-info {
-        flex-direction: column;
-        gap: 10px;
-        width: 100%;
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+    }
+    
+    .quantity.editable,
+    .price-display {
+        text-align: center;
+        min-width: auto;
     }
     
     .product-name {
-        margin-right: 0;
-        margin-bottom: 10px;
+        padding-right: 0;
+        text-align: center;
     }
     
     .edit-name-input {
@@ -387,4 +394,50 @@ button:disabled {
     .form-field {
         width: 100%;
     }
+}
+
+.quantity.editable {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.quantity.editable:hover {
+    background-color: #e9ecef;
+}
+
+.quantity.editable:hover::after {
+    content: '✎';
+    margin-left: 8px;
+    font-size: 0.8em;
+    color: #6c757d;
+}
+
+.edit-quantity-input {
+    width: 60px;
+    padding: 5px;
+    border: 1px solid #3498db;
+    border-radius: 4px;
+    font-size: inherit;
+    text-align: center;
+}
+
+.edit-quantity-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+}
+
+@media (max-width: 768px) {
+    .edit-quantity-input {
+        width: 100%;
+        max-width: 120px;
+        margin: 0 auto;
+    }
+}
+
+.price-display {
+    white-space: nowrap;
+    text-align: right;
+    min-width: 120px;
 } 

@@ -139,27 +139,69 @@ function updateProductsList() {
             input.select();
         });
 
-        div.appendChild(productNameSpan);
-        
         const infoDiv = document.createElement('div');
         infoDiv.className = 'product-info';
-        infoDiv.innerHTML = `
-            <span>Cantidad: ${item.quantity}</span>
-            <span>Precio: ${(item.product.pvp * item.quantity).toFixed(2)}€</span>
-            <button class="remove-product" data-index="${index}">Eliminar</button>
-        `;
-        div.appendChild(infoDiv);
         
-        container.appendChild(div);
-    });
+        // Crear el span de cantidad editable
+        const quantitySpan = document.createElement('span');
+        quantitySpan.className = 'quantity editable';
+        quantitySpan.innerHTML = `Cantidad: <span class="quantity-value">${item.quantity}</span>`;
+        quantitySpan.title = 'Haz clic para editar la cantidad';
+        
+        quantitySpan.addEventListener('click', function() {
+            const currentQuantity = item.quantity;
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.min = '1';
+            input.value = currentQuantity;
+            input.className = 'edit-quantity-input';
+            
+            const saveQuantity = () => {
+                const newQuantity = parseInt(input.value);
+                if (!isNaN(newQuantity) && newQuantity > 0 && newQuantity !== currentQuantity) {
+                    item.quantity = newQuantity;
+                    updateProductsList();
+                } else {
+                    updateProductsList();
+                }
+            };
 
-    // Add event listeners to remove buttons
-    document.querySelectorAll('.remove-product').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const index = parseInt(e.target.dataset.index);
+            input.addEventListener('blur', saveQuantity);
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    saveQuantity();
+                }
+            });
+
+            const quantityValueSpan = quantitySpan.querySelector('.quantity-value');
+            quantityValueSpan.innerHTML = '';
+            quantityValueSpan.appendChild(input);
+            
+            input.focus();
+            input.select();
+        });
+
+        // Añadir el precio y el botón de eliminar
+        const priceSpan = document.createElement('span');
+        priceSpan.className = 'price-display';
+        priceSpan.textContent = `Precio: ${(item.product.pvp * item.quantity).toFixed(2)}€`;
+        
+        const removeButton = document.createElement('button');
+        removeButton.className = 'remove-product';
+        removeButton.textContent = 'Eliminar';
+        removeButton.dataset.index = index;
+        removeButton.addEventListener('click', () => {
             addedProducts.splice(index, 1);
             updateProductsList();
         });
+
+        infoDiv.appendChild(quantitySpan);
+        infoDiv.appendChild(priceSpan);
+        infoDiv.appendChild(removeButton);
+        
+        div.appendChild(productNameSpan);
+        div.appendChild(infoDiv);
+        container.appendChild(div);
     });
 }
 
