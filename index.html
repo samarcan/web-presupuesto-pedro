@@ -14,27 +14,63 @@
     <div class="container">
         <h1>Generador de Presupuestos</h1>
         
-        <div class="form-container">
-            <div class="input-group">
-                <input type="text" id="productId" placeholder="ID del producto" required>
-                <input type="number" id="quantity" value="1" min="1" placeholder="Cantidad">
-                <button id="addProduct">Añadir Producto</button>
+        <!-- Paso 1: Añadir Productos -->
+        <div class="step-section">
+            <h2>1. Añadir Productos</h2>
+            <div class="form-container">
+                <div class="form-tabs">
+                    <button class="tab-button active" data-tab="auto">Añadir por ID</button>
+                    <button class="tab-button" data-tab="manual">Añadir Manual</button>
+                </div>
+
+                <!-- Formulario automático -->
+                <div class="tab-content active" id="autoForm">
+                    <div class="input-group">
+                        <input type="text" id="productId" placeholder="ID del producto" required>
+                        <input type="number" id="quantity" value="1" min="1" placeholder="Cantidad">
+                        <button id="addProduct">Añadir Producto</button>
+                    </div>
+                </div>
+
+                <!-- Formulario manual -->
+                <div class="tab-content" id="manualForm">
+                    <div class="input-group">
+                        <input type="text" id="productName" placeholder="Nombre del producto" required>
+                        <input type="number" id="productPrice" step="0.01" placeholder="Precio" required>
+                        <input type="number" id="productQuantity" value="1" min="1" placeholder="Cantidad">
+                        <button id="addManualProduct">Añadir Producto</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="products-list">
+                <h3>Productos Añadidos</h3>
+                <div id="addedProducts"></div>
             </div>
         </div>
 
-        <div class="products-list">
-            <h2>Productos Añadidos</h2>
-            <div id="addedProducts"></div>
+        <!-- Paso 2: Información del Cliente -->
+        <div class="step-section">
+            <h2>2. Información del Cliente</h2>
+            <div class="form-container">
+                <div class="input-group">
+                    <div class="form-field">
+                        <input type="text" id="clientName" placeholder="Nombre completo o empresa" required>
+                    </div>
+                    <div class="form-field">
+                        <textarea id="clientAddress" placeholder="Dirección completa" rows="3" required></textarea>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="button-group">
+        <!-- Paso 3: Generar Presupuesto -->
+        <div class="step-section">
+            <h2>3. Generar Presupuesto</h2>
             <button id="generateQuote" class="primary-button">Generar Presupuesto</button>
-            <button id="downloadPDF" class="primary-button" style="display: none;">Descargar PDF</button>
-        </div>
-
-        <div class="quote-container">
-            <h2>Presupuesto</h2>
-            <div id="quoteResult"></div>
+            <div class="quote-container">
+                <div id="quoteResult"></div>
+            </div>
         </div>
     </div>
     <script src="js/productos_escoda.js"></script>
