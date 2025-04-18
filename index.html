@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador de Presupuestos</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
+    <!-- Logo preload (hidden) -->
+    <img id="sertecLogo" src="./assets/logo-sertec.png" style="display: none;" alt="SERTEC EXTREMADURA">
+    
     <div class="container">
         <h1>Generador de Presupuestos</h1>
         
@@ -23,14 +27,17 @@
             <div id="addedProducts"></div>
         </div>
 
-        <button id="generateQuote" class="primary-button">Generar Presupuesto</button>
+        <div class="button-group">
+            <button id="generateQuote" class="primary-button">Generar Presupuesto</button>
+            <button id="downloadPDF" class="primary-button" style="display: none;">Descargar PDF</button>
+        </div>
 
         <div class="quote-container">
             <h2>Presupuesto</h2>
             <div id="quoteResult"></div>
         </div>
     </div>
-    <script src="productos_escoda.js"></script>
-    <script src="script.js"></script>
+    <script src="js/productos_escoda.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html> 
