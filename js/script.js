@@ -270,7 +270,7 @@ document.getElementById('generateQuote').addEventListener('click', () => {
     
     // Add client information (in a box to the right)
     doc.setFontSize(8);
-    const clientBoxWidth = (pageWidth - (margin * 2)) * 0.3; // 3/10 del espacio disponible
+    const clientBoxWidth = (pageWidth - (margin * 2)) * 0.5; // 1/2 del espacio disponible
     const clientBoxX = pageWidth - margin - clientBoxWidth; // Alineado a la derecha
     const clientBoxY = 40;
     const clientBoxHeight = 25;
@@ -283,18 +283,19 @@ document.getElementById('generateQuote').addEventListener('click', () => {
     // Add client info inside box (mixed alignment)
     const rightMargin = 4;
     const leftMargin = 4;
+    doc.setFontSize(7);
     doc.setFont(undefined, 'bold');
     doc.text('CLIENTE:', clientBoxX + leftMargin, clientBoxY + 5);
     doc.setFont(undefined, 'normal');
     
-    // Ajustar el texto del cliente al nuevo ancho del cuadro
+    // Ajustar el texto del cliente al nuevo ancho del cuadro y convertir a mayúsculas
     const maxClientTextWidth = clientBoxWidth - leftMargin - rightMargin - 15; // Restamos espacio extra para "CLIENTE:"
-    const clientNameLines = doc.splitTextToSize(clientName, maxClientTextWidth);
+    const clientNameLines = doc.splitTextToSize(clientName.toUpperCase(), maxClientTextWidth);
     doc.text(clientNameLines, clientBoxX + clientBoxWidth - rightMargin, clientBoxY + 10, { align: 'right' });
     
-    const addressLines = doc.splitTextToSize(clientAddress, maxClientTextWidth);
+    const addressLines = doc.splitTextToSize(clientAddress.toUpperCase(), maxClientTextWidth);
     addressLines.forEach((line, index) => {
-        doc.text(line, clientBoxX + clientBoxWidth - rightMargin, clientBoxY + 15 + (index * 4), { align: 'right' });
+        doc.text(line, clientBoxX + clientBoxWidth - rightMargin, clientBoxY + 15 + (index * 3.5), { align: 'right' });
     });
     
     // Añadir línea separadora después de la cabecera
