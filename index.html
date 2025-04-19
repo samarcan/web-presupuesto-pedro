@@ -6,6 +6,8 @@
     <title>Generador de Presupuestos</title>
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Cargar datos de productos -->
+    <script src="js/productos_escoda.js"></script>
 </head>
 <body>
     <!-- Logo preload (hidden) -->
@@ -73,7 +75,11 @@
             </div>
         </div>
     </div>
-    <script src="js/productos_escoda.js"></script>
-    <script src="js/script.js"></script>
+    
+    <!-- Cargar código de la aplicación en el orden correcto -->
+    <script src="js/ui.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/pdf-generator.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html> 
