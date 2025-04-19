@@ -250,12 +250,21 @@ document.getElementById('generateQuote').addEventListener('click', () => {
     }
     
     // Add company information (aligned to the right)
-    doc.setFontSize(8);
+    doc.setFontSize(11); // Tamaño más pequeño para el nombre de la empresa
+    doc.setFont(undefined, 'bold');
+    doc.text('SERTEC DE EXTREMADURA, SL', pageWidth - margin, 12, { align: 'right' });
+    
+    // Añadir línea separadora
+    doc.setDrawColor(0, 0, 0);
+    doc.setLineWidth(0.2);
+    const lineWidth = 50; // Ancho de la línea en puntos
+    doc.line(pageWidth - margin - lineWidth, 14, pageWidth - margin, 14);
+    
+    doc.setFontSize(8); // Tamaño más pequeño para el resto de la información
     doc.setFont(undefined, 'normal');
-    doc.text('SERTEC DE EXTREMADURA, SL', pageWidth - margin, 15, { align: 'right' });
-    doc.text('POL. IND. LAS CAPELLANIAS', pageWidth - margin, 20, { align: 'right' });
-    doc.text('PARCELA Nº 246', pageWidth - margin, 25, { align: 'right' });
-    doc.text('10001 CACERES', pageWidth - margin, 30, { align: 'right' });
+    doc.text('POL. IND. LAS CAPELLANIAS', pageWidth - margin, 18, { align: 'right' });
+    doc.text('PARCELA Nº 246', pageWidth - margin, 22, { align: 'right' });
+    doc.text('10001 CACERES', pageWidth - margin, 26, { align: 'right' });
     
     // Add title (left-aligned)
     doc.setFontSize(14);
