@@ -33,13 +33,18 @@ function updateProductsList() {
         
         productNameSpan.addEventListener('click', function() {
             const currentText = item.product.descripcion;
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.value = currentText;
-            input.className = 'edit-name-input';
+            const editContainer = document.createElement('div');
+            editContainer.className = 'edit-container';
+            
+            const textarea = document.createElement('textarea');
+            textarea.value = currentText;
+            textarea.className = 'edit-name-textarea';
+            
+            // Configurar altura automática
+            textarea.style.height = 'auto';
             
             const saveEdit = () => {
-                const newName = input.value.trim();
+                const newName = textarea.value.trim();
                 if (newName && newName !== currentText) {
                     item.product.descripcion = newName;
                     updateProductsList();
@@ -48,18 +53,57 @@ function updateProductsList() {
                 }
             };
 
-            input.addEventListener('blur', saveEdit);
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
+            // Eliminar el evento blur que cerraba la edición
+            
+            textarea.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
                     saveEdit();
                 }
             });
+            
+            // Función para ajustar la altura automáticamente
+            const adjustHeight = () => {
+                textarea.style.height = 'auto';
+                textarea.style.height = (textarea.scrollHeight) + 'px';
+            };
+            
+            // Aplicar ajuste de altura en eventos
+            textarea.addEventListener('input', adjustHeight);
+            
+            // Agregar botones para guardar y cancelar
+            const buttonsContainer = document.createElement('div');
+            buttonsContainer.className = 'edit-buttons-container';
+            
+            const saveButton = document.createElement('button');
+            saveButton.className = 'edit-save-button';
+            saveButton.textContent = 'Guardar';
+            saveButton.addEventListener('click', saveEdit);
+            
+            const cancelButton = document.createElement('button');
+            cancelButton.className = 'edit-cancel-button';
+            cancelButton.textContent = 'Cancelar';
+            cancelButton.addEventListener('click', () => {
+                updateProductsList();
+            });
+            
+            buttonsContainer.appendChild(saveButton);
+            buttonsContainer.appendChild(cancelButton);
 
             // Reemplazar solo el texto de descripción, manteniendo el ID si existe
             const idText = !item.id.startsWith('MANUAL-') ? ` (ID: ${item.id})` : '';
-            input.style.width = Math.max(200, currentText.length * 8) + 'px';
+            // Limitar el ancho máximo en píxeles para que no sea excesivo
+            const maxWidth = Math.min(500, Math.max(200, currentText.length * 8));
+            textarea.style.width = maxWidth + 'px';
             productNameSpan.innerHTML = '';
-            productNameSpan.appendChild(input);
+            
+            // Añadimos primero el textarea y luego los botones al contenedor
+            editContainer.appendChild(textarea);
+            editContainer.appendChild(buttonsContainer);
+            
+            // Añadimos el contenedor al span
+            productNameSpan.appendChild(editContainer);
+            
             if (idText) {
                 const idSpan = document.createElement('span');
                 idSpan.className = 'product-id';
@@ -67,8 +111,10 @@ function updateProductsList() {
                 productNameSpan.appendChild(idSpan);
             }
             
-            input.focus();
-            input.select();
+            textarea.focus();
+            textarea.select();
+            // Ajustar altura al inicio
+            setTimeout(adjustHeight, 0);
         });
 
         const infoDiv = document.createElement('div');

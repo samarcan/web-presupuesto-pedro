@@ -86,7 +86,7 @@ button:hover {
 
 .product-item {
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: minmax(auto, 65%) auto;
     gap: 20px;
     padding: 10px;
     background-color: #f8f9fa;
@@ -145,6 +145,67 @@ button:hover {
 .edit-name-input:focus {
     outline: none;
     box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+}
+
+.edit-name-textarea {
+    padding: 5px;
+    border: 1px solid #3498db;
+    border-radius: 4px;
+    font-size: inherit;
+    display: inline-block;
+    vertical-align: middle;
+    resize: none;
+    overflow: hidden;
+    min-height: 36px;
+    max-width: 100%;
+    font-family: inherit;
+    line-height: 1.4;
+}
+
+.edit-name-textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+}
+
+.edit-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    max-width: 70%;
+}
+
+.edit-buttons-container {
+    display: flex;
+    gap: 8px;
+}
+
+.edit-save-button, .edit-cancel-button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    flex: 1;
+    max-width: 100px;
+}
+
+.edit-save-button {
+    background-color: #27ae60;
+    color: white;
+}
+
+.edit-save-button:hover {
+    background-color: #219955;
+}
+
+.edit-cancel-button {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.edit-cancel-button:hover {
+    background-color: #c0392b;
 }
 
 .remove-product {
@@ -226,12 +287,27 @@ embed {
         text-align: center;
     }
     
-    .edit-name-input {
+    .edit-name-input,
+    .edit-name-textarea {
         max-width: 100%;
+        width: 100% !important;
     }
     
     embed {
         height: 500px !important;
+    }
+    
+    .edit-buttons-container {
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .edit-save-button, .edit-cancel-button {
+        max-width: none;
+    }
+    
+    .edit-container {
+        max-width: 100%;
     }
 }
 
