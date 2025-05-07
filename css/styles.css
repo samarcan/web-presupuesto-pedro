@@ -513,7 +513,43 @@ button:disabled {
 }
 
 .price-display {
-    white-space: nowrap;
+    color: #2c3e50;
+    font-weight: bold;
+}
+
+.price-display.editable {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.price-display.editable:hover {
+    background-color: #e9ecef;
+}
+
+.price-display.editable:hover::after {
+    content: '✎';
+    margin-left: 8px;
+    font-size: 0.8em;
+    color: #6c757d;
+}
+
+.edit-price-input {
+    padding: 5px;
+    border: 1px solid #3498db;
+    border-radius: 4px;
+    font-size: inherit;
+    width: 80px;
     text-align: right;
-    min-width: 120px;
+}
+
+.edit-price-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
+}
+
+.subtotal-display {
+    color: #2c3e50;
+    font-weight: bold;
 } 

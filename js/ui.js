@@ -9,7 +9,7 @@ function initializeUI() {
             // Remove active class from all tabs and contents
             document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            
+
             // Add active class to clicked tab and corresponding content
             button.classList.add('active');
             document.getElementById(button.dataset.tab + 'Form').classList.add('active');
@@ -25,24 +25,24 @@ function updateProductsList() {
     addedProducts.forEach((item, index) => {
         const div = document.createElement('div');
         div.className = 'product-item';
-        
+
         const productNameSpan = document.createElement('span');
         productNameSpan.className = 'product-name editable';
         productNameSpan.innerHTML = `${item.product.descripcion}${!item.id.startsWith('MANUAL-') ? ` (ID: ${item.id})` : ''}`;
         productNameSpan.title = 'Haz clic para editar';
-        
-        productNameSpan.addEventListener('click', function() {
+
+        productNameSpan.addEventListener('click', function () {
             const currentText = item.product.descripcion;
             const editContainer = document.createElement('div');
             editContainer.className = 'edit-container';
-            
+
             const textarea = document.createElement('textarea');
             textarea.value = currentText;
             textarea.className = 'edit-name-textarea';
-            
+
             // Configurar altura automática
             textarea.style.height = 'auto';
-            
+
             const saveEdit = () => {
                 const newName = textarea.value.trim();
                 if (newName && newName !== currentText) {
@@ -54,39 +54,39 @@ function updateProductsList() {
             };
 
             // Eliminar el evento blur que cerraba la edición
-            
+
             textarea.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
                     saveEdit();
                 }
             });
-            
+
             // Función para ajustar la altura automáticamente
             const adjustHeight = () => {
                 textarea.style.height = 'auto';
                 textarea.style.height = (textarea.scrollHeight) + 'px';
             };
-            
+
             // Aplicar ajuste de altura en eventos
             textarea.addEventListener('input', adjustHeight);
-            
+
             // Agregar botones para guardar y cancelar
             const buttonsContainer = document.createElement('div');
             buttonsContainer.className = 'edit-buttons-container';
-            
+
             const saveButton = document.createElement('button');
             saveButton.className = 'edit-save-button';
             saveButton.textContent = 'Guardar';
             saveButton.addEventListener('click', saveEdit);
-            
+
             const cancelButton = document.createElement('button');
             cancelButton.className = 'edit-cancel-button';
             cancelButton.textContent = 'Cancelar';
             cancelButton.addEventListener('click', () => {
                 updateProductsList();
             });
-            
+
             buttonsContainer.appendChild(saveButton);
             buttonsContainer.appendChild(cancelButton);
 
@@ -96,21 +96,21 @@ function updateProductsList() {
             const maxWidth = Math.min(500, Math.max(200, currentText.length * 8));
             textarea.style.width = maxWidth + 'px';
             productNameSpan.innerHTML = '';
-            
+
             // Añadimos primero el textarea y luego los botones al contenedor
             editContainer.appendChild(textarea);
             editContainer.appendChild(buttonsContainer);
-            
+
             // Añadimos el contenedor al span
             productNameSpan.appendChild(editContainer);
-            
+
             if (idText) {
                 const idSpan = document.createElement('span');
                 idSpan.className = 'product-id';
                 idSpan.textContent = idText;
                 productNameSpan.appendChild(idSpan);
             }
-            
+
             textarea.focus();
             textarea.select();
             // Ajustar altura al inicio
@@ -119,21 +119,21 @@ function updateProductsList() {
 
         const infoDiv = document.createElement('div');
         infoDiv.className = 'product-info';
-        
+
         // Crear el span de cantidad editable
         const quantitySpan = document.createElement('span');
         quantitySpan.className = 'quantity editable';
         quantitySpan.innerHTML = `Cantidad: <span class="quantity-value">${item.quantity}</span>`;
         quantitySpan.title = 'Haz clic para editar la cantidad';
-        
-        quantitySpan.addEventListener('click', function() {
+
+        quantitySpan.addEventListener('click', function () {
             const currentQuantity = item.quantity;
             const input = document.createElement('input');
             input.type = 'number';
             input.min = '1';
             input.value = currentQuantity;
             input.className = 'edit-quantity-input';
-            
+
             const saveQuantity = () => {
                 const newQuantity = parseInt(input.value);
                 if (!isNaN(newQuantity) && newQuantity > 0 && newQuantity !== currentQuantity) {
@@ -154,16 +154,51 @@ function updateProductsList() {
             const quantityValueSpan = quantitySpan.querySelector('.quantity-value');
             quantityValueSpan.innerHTML = '';
             quantityValueSpan.appendChild(input);
-            
+
             input.focus();
             input.select();
         });
 
         // Añadir el precio y el botón de eliminar
         const priceSpan = document.createElement('span');
-        priceSpan.className = 'price-display';
-        priceSpan.textContent = `Precio: ${(item.product.pvp * item.quantity).toFixed(2)}€`;
-        
+        priceSpan.className = 'price-display editable';
+        priceSpan.innerHTML = `Precio: <span class="price-value">${item.product.pvp.toFixed(2)}€</span>`;
+        priceSpan.title = 'Haz clic para editar el precio';
+
+        priceSpan.addEventListener('click', function () {
+            const currentPrice = item.product.pvp;
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.min = '0.01';
+            input.step = '0.01';
+            input.value = currentPrice;
+            input.className = 'edit-price-input';
+
+            const savePrice = () => {
+                const newPrice = parseFloat(input.value);
+                if (!isNaN(newPrice) && newPrice > 0 && newPrice !== currentPrice) {
+                    item.product.pvp = newPrice;
+                    updateProductsList();
+                } else {
+                    updateProductsList();
+                }
+            };
+
+            input.addEventListener('blur', savePrice);
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    savePrice();
+                }
+            });
+
+            const priceValueSpan = priceSpan.querySelector('.price-value');
+            priceValueSpan.innerHTML = '';
+            priceValueSpan.appendChild(input);
+
+            input.focus();
+            input.select();
+        });
+
         const removeButton = document.createElement('button');
         removeButton.className = 'remove-product';
         removeButton.textContent = 'Eliminar';
@@ -176,7 +211,7 @@ function updateProductsList() {
         infoDiv.appendChild(quantitySpan);
         infoDiv.appendChild(priceSpan);
         infoDiv.appendChild(removeButton);
-        
+
         div.appendChild(productNameSpan);
         div.appendChild(infoDiv);
         container.appendChild(div);
