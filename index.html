@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,13 +10,14 @@
     <!-- Cargar datos de productos -->
     <script src="js/productos_escoda.js"></script>
 </head>
+
 <body>
     <!-- Logo preload (hidden) -->
     <img id="sertecLogo" src="./assets/logo-sertec.png" style="display: none;" alt="SERTEC EXTREMADURA">
-    
+
     <div class="container">
         <h1>Generador de Presupuestos</h1>
-        
+
         <!-- Paso 1: Añadir Productos -->
         <div class="step-section">
             <h2>1. Añadir Productos</h2>
@@ -69,17 +71,26 @@
         <!-- Paso 3: Generar Presupuesto -->
         <div class="step-section">
             <h2>3. Generar Presupuesto</h2>
+
+            <!-- Opciones de presupuesto -->
+            <div class="quote-options">
+                <button id="saveQuote" class="secondary-button">Guardar Presupuesto</button>
+                <button id="manageQuotes" class="secondary-button">Gestionar Guardados</button>
+            </div>
+
             <button id="generateQuote" class="primary-button">Generar Presupuesto</button>
             <div class="quote-container">
                 <div id="quoteResult"></div>
             </div>
         </div>
     </div>
-    
+
     <!-- Cargar código de la aplicación en el orden correcto -->
     <script src="js/ui.js"></script>
     <script src="js/products.js"></script>
     <script src="js/pdf-generator.js"></script>
+    <script src="js/storage.js"></script>
     <script src="js/main.js"></script>
 </body>
-</html> 
+
+</html>

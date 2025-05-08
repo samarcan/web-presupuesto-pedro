@@ -552,4 +552,152 @@ button:disabled {
 .subtotal-display {
     color: #2c3e50;
     font-weight: bold;
+}
+
+/* Estilos para los botones de opciones de presupuesto */
+.quote-options {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.secondary-button {
+    background-color: #2c3e50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.secondary-button:hover {
+    background-color: #1a2530;
+}
+
+/* Estilos para diálogos modales */
+.dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.dialog-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dialog-content h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.quotes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+.quote-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+}
+
+.quote-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.quote-name {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.quote-date, .quote-products, .quote-modified {
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.quote-modified {
+    color: #e67e22; /* Color naranja para destacar la modificación */
+}
+
+.quote-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.load-button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.delete-button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.dialog-close-button {
+    display: block;
+    margin: 0 auto;
+    padding: 8px 15px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Estilos responsivos para diálogos */
+@media (max-width: 768px) {
+    .dialog-content {
+        width: 95%;
+        max-height: 90vh;
+    }
+    
+    .quote-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .quote-actions {
+        margin-top: 10px;
+        align-self: flex-end;
+    }
 } 
