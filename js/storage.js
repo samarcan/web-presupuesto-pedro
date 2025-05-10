@@ -290,7 +290,7 @@ function openManageDialog() {
     const importLabel = document.createElement('label');
     importLabel.htmlFor = 'import-yaml-file';
     importLabel.className = 'import-button';
-    importLabel.innerHTML = '<i class="fas fa-file-import"></i> Importar YAML';
+    importLabel.innerHTML = '<i class="fas fa-file-import"></i> Importar Presupuesto';
 
     const importInput = document.createElement('input');
     importInput.type = 'file';
