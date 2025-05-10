@@ -3,13 +3,52 @@
 
 // Inicialización del gestor de almacenamiento
 function initializeStorage() {
-    // Agregar event listeners a los botones de guardar y cargar
-    document.getElementById('saveQuote').addEventListener('click', saveQuote);
-    document.getElementById('manageQuotes').addEventListener('click', openManageDialog);
+    // Agregar event listeners a los botones existentes
+    document.getElementById('saveQuote')?.addEventListener('click', saveQuote);
+    document.getElementById('manageQuotes')?.addEventListener('click', openManageDialog);
+
+    // Agregar event listeners a los botones de la navbar (versión escritorio)
+    document.getElementById('navSaveQuote')?.addEventListener('click', saveQuote);
+    document.getElementById('navManageQuotes')?.addEventListener('click', openManageDialog);
 
     // Inicializar localStorage si no existe
     if (!localStorage.getItem('savedQuotes')) {
         localStorage.setItem('savedQuotes', JSON.stringify([]));
+    }
+}
+
+// Crear un nuevo presupuesto (limpiar el actual)
+function createNewQuote() {
+    // Confirmar si hay productos
+    if (addedProducts.length > 0) {
+        if (!confirm('¿Estás seguro de que quieres crear un nuevo presupuesto? Se perderán los datos no guardados.')) {
+            return;
+        }
+    }
+
+    // Limpiar productos
+    addedProducts.length = 0;
+
+    // Limpiar campos del cliente
+    document.getElementById('clientName').value = '';
+    document.getElementById('clientAddress').value = '';
+
+    // Limpiar campo de producto
+    document.getElementById('productId').value = '';
+    document.getElementById('quantity').value = '1';
+
+    // Actualizar UI
+    updateProductsList();
+
+    // Eliminar el resultado del presupuesto si existe
+    const quoteResult = document.getElementById('quoteResult');
+    if (quoteResult) {
+        quoteResult.innerHTML = '';
+    }
+
+    // Mostrar notificación
+    if (typeof showNotification === 'function') {
+        showNotification('Nuevo presupuesto creado');
     }
 }
 

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador de Presupuestos</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <!-- Los productos ahora se cargan desde Google Drive -->
 </head>
@@ -14,9 +15,41 @@
     <!-- Logo preload (hidden) -->
     <img id="sertecLogo" src="./assets/logo-sertec.png" style="display: none;" alt="SERTEC EXTREMADURA">
 
-    <div class="container">
-        <h1>Generador de Presupuestos</h1>
+    <!-- Menú lateral para móviles -->
+    <div class="sidemenu" id="sidemenu">
+        <div class="sidemenu-header">
+            <button class="close-menu" id="closeMenu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="sidemenu-links">
+            <li><a href="#" id="navSaveQuoteMobile"><i class="fas fa-save"></i> Guardar</a></li>
+            <li><a href="#" id="navManageQuotesMobile"><i class="fas fa-folder"></i> Presupuestos</a></li>
+        </ul>
+    </div>
 
+    <!-- Overlay para cuando el menú está abierto -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-logo">
+                <span>Generador de Presupuestos</span>
+            </div>
+            <!-- Menú para escritorio -->
+            <ul class="navbar-menu">
+                <li><a href="#" id="navSaveQuote"><i class="fas fa-save"></i> Guardar</a></li>
+                <li><a href="#" id="navManageQuotes"><i class="fas fa-folder"></i> Presupuestos</a></li>
+            </ul>
+            <!-- Botón de hamburguesa para móviles -->
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
         <!-- Paso 1: Añadir Productos -->
         <div class="step-section">
             <h2>1. Añadir Productos</h2>
@@ -70,12 +103,6 @@
         <!-- Paso 3: Generar Presupuesto -->
         <div class="step-section">
             <h2>3. Generar Presupuesto</h2>
-
-            <!-- Opciones de presupuesto -->
-            <div class="quote-options">
-                <button id="saveQuote" class="secondary-button">Guardar Presupuesto</button>
-                <button id="manageQuotes" class="secondary-button">Gestionar Guardados</button>
-            </div>
 
             <button id="generateQuote" class="primary-button">Generar Presupuesto</button>
             <div class="quote-container">

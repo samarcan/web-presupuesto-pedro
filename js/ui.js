@@ -15,6 +15,104 @@ function initializeUI() {
             document.getElementById(button.dataset.tab + 'Form').classList.add('active');
         });
     });
+
+    // Inicializar los elementos activos de la navbar
+    setupNavbarActiveItems();
+
+    // Inicializar el menú móvil
+    setupMobileMenu();
+}
+
+// Función para configurar el menú móvil
+function setupMobileMenu() {
+    const menuToggle = document.getElementById('menuToggle');
+    const closeMenu = document.getElementById('closeMenu');
+    const menuOverlay = document.getElementById('menuOverlay');
+    const sidemenu = document.getElementById('sidemenu');
+
+    // Abrir menú
+    menuToggle?.addEventListener('click', () => {
+        sidemenu.classList.add('active');
+        menuOverlay.classList.add('active');
+        document.body.classList.add('menu-open');
+    });
+
+    // Cerrar menú (botón X)
+    closeMenu?.addEventListener('click', closeMenuFunction);
+
+    // Cerrar menú (clic en overlay)
+    menuOverlay?.addEventListener('click', closeMenuFunction);
+
+    // Función para cerrar el menú
+    function closeMenuFunction() {
+        sidemenu.classList.remove('active');
+        menuOverlay.classList.remove('active');
+        document.body.classList.remove('menu-open');
+    }
+
+    // Víncular eventos de los botones del menú móvil
+    document.getElementById('navSaveQuoteMobile')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (typeof saveQuote === 'function') {
+            saveQuote();
+        }
+        closeMenuFunction();
+    });
+
+    document.getElementById('navManageQuotesMobile')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (typeof openManageDialog === 'function') {
+            openManageDialog();
+        }
+        closeMenuFunction();
+    });
+
+    // Gestionar cambios de tamaño de ventana
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768 && sidemenu.classList.contains('active')) {
+            closeMenuFunction();
+        }
+    });
+}
+
+// Función para configurar elementos activos en la navbar
+function setupNavbarActiveItems() {
+    // Obtener todos los elementos del menú
+    const menuItems = document.querySelectorAll('.navbar-menu li a, .sidemenu-links li a');
+
+    // Añadir event listeners para establecer el elemento activo
+    menuItems.forEach(item => {
+        item.addEventListener('click', function () {
+            // Eliminar la clase active de todos los elementos
+            menuItems.forEach(link => link.classList.remove('active'));
+
+            // Añadir la clase active al elemento clickeado
+            this.classList.add('active');
+
+            // También activar el elemento correspondiente en el otro menú (móvil o escritorio)
+            const isMobileLink = this.id.includes('Mobile');
+            const correspondingId = isMobileLink
+                ? this.id.replace('Mobile', '')
+                : this.id + 'Mobile';
+
+            const correspondingLink = document.getElementById(correspondingId);
+            if (correspondingLink) {
+                correspondingLink.classList.add('active');
+            }
+        });
+    });
+
+    // Establecer el botón "Guardar" como activo por defecto
+    const saveButtonDesktop = document.getElementById('navSaveQuote');
+    const saveButtonMobile = document.getElementById('navSaveQuoteMobile');
+
+    if (saveButtonDesktop) {
+        saveButtonDesktop.classList.add('active');
+    }
+
+    if (saveButtonMobile) {
+        saveButtonMobile.classList.add('active');
+    }
 }
 
 // Update the products list in the UI
