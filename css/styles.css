@@ -800,7 +800,54 @@ button:disabled {
 }
 
 .secondary-button:hover {
-    background-color: #1a2530;
+    background-color: #e67e22;
+}
+
+/* Estilos para grupo de botones */
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .button-group {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+
+/* Estilos para la importación de archivos */
+.import-container {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.import-button {
+    display: inline-block;
+    background-color: #3498db;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.import-button:hover {
+    background-color: #2980b9;
+}
+
+.import-button i {
+    margin-right: 5px;
+}
+
+.no-quotes-message {
+    text-align: center;
+    color: #666;
+    margin: 20px 0;
+    font-style: italic;
 }
 
 /* Estilos para diálogos modales */
