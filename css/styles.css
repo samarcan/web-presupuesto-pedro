@@ -233,53 +233,6 @@ body {
     }
 }
 
-/* Estilos para las notificaciones */
-.notification-container {
-    position: fixed;
-    top: 80px; /* Ajustado para dejar espacio para la navbar */
-    right: 20px;
-    max-width: 350px;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.notification {
-    padding: 12px 20px;
-    border-radius: 5px;
-    color: white;
-    font-size: 14px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16);
-    animation: slide-in 0.4s ease-out;
-    transition: opacity 0.3s ease-out;
-}
-
-.notification.success {
-    background-color: #2ecc71;
-    border-left: 5px solid #27ae60;
-}
-
-.notification.error {
-    background-color: #e74c3c;
-    border-left: 5px solid #c0392b;
-}
-
-.notification.fade-out {
-    opacity: 0;
-}
-
-@keyframes slide-in {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -971,5 +924,179 @@ button:disabled {
     .quote-actions {
         margin-top: 10px;
         align-self: flex-end;
+    }
+}
+
+/* Estilos para botón de información en la navbar */
+.info-button {
+    position: relative;
+    width: 57px;
+    height: 49px;
+}
+
+.desktop-only {
+    display: inline;
+}
+
+/* Modal de información */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    z-index: 1060;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    position: relative;
+    background-color: #fff;
+    margin: 60px auto;
+    padding: 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    width: 90%;
+    max-width: 700px;
+    max-height: 80vh;
+    overflow: hidden;
+    animation: slideDown 0.4s ease;
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #2c3e50 0%, #1a2530 100%);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: white;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.close-modal {
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-modal:hover {
+    color: #bbb;
+}
+
+.modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    max-height: calc(80vh - 60px);
+}
+
+/* Estilo para la información de archivos */
+.products-info {
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.info-section {
+    margin-bottom: 20px;
+}
+
+.info-section h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    color: #2c3e50;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.info-item {
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+}
+
+.info-item.success {
+    background-color: rgba(46, 204, 113, 0.1);
+    border-left: 4px solid #2ecc71;
+}
+
+.info-item.error {
+    background-color: rgba(231, 76, 60, 0.1);
+    border-left: 4px solid #e74c3c;
+}
+
+.info-item .file-name {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.info-item .file-details {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.info-item .file-error {
+    color: #e74c3c;
+    font-size: 0.9rem;
+    margin-top: 4px;
+}
+
+.info-summary {
+    background-color: #f8f9fa;
+    padding: 12px;
+    border-radius: 4px;
+    margin-top: 15px;
+    font-weight: 500;
+}
+
+.loading-indicator {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideDown {
+    from { 
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to { 
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .desktop-only {
+        display: none;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 40px auto;
+    }
+    
+    .modal-header h2 {
+        font-size: 1.3rem;
     }
 } 

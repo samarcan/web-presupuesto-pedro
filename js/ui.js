@@ -21,6 +21,9 @@ function initializeUI() {
 
     // Inicializar el menú móvil
     setupMobileMenu();
+
+    // Inicializar el modal de información
+    setupInfoModal();
 }
 
 // Función para configurar el menú móvil
@@ -67,12 +70,165 @@ function setupMobileMenu() {
         closeMenuFunction();
     });
 
+    document.getElementById('navInfoMobile')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        showProductsInfoModal();
+        closeMenuFunction();
+    });
+
     // Gestionar cambios de tamaño de ventana
     window.addEventListener('resize', () => {
         if (window.innerWidth > 768 && sidemenu.classList.contains('active')) {
             closeMenuFunction();
         }
     });
+}
+
+// Configurar el modal de información
+function setupInfoModal() {
+    const modal = document.getElementById('infoModal');
+    const closeButton = modal?.querySelector('.close-modal');
+    const infoButton = document.getElementById('navInfo');
+    const infoButtonMobile = document.getElementById('navInfoMobile');
+
+    // Abrir modal al hacer clic en el botón de información
+    infoButton?.addEventListener('click', (e) => {
+        e.preventDefault();
+        showProductsInfoModal();
+    });
+
+    // Cerrar modal al hacer clic en el botón de cierre
+    closeButton?.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    // Cerrar modal al hacer clic fuera del contenido
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    // Cerrar modal con la tecla Escape
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.style.display === 'block') {
+            modal.style.display = 'none';
+        }
+    });
+}
+
+// Función para mostrar el modal con la información de productos cargados
+function showProductsInfoModal() {
+    const modal = document.getElementById('infoModal');
+    const contentDiv = document.getElementById('productsInfoContent');
+
+    if (!modal || !contentDiv) return;
+
+    // Mostrar el modal
+    modal.style.display = 'block';
+
+    // Verificar si la información de archivos está disponible
+    if (!window.filesInfo || !window.filesInfo.loaded) {
+        contentDiv.innerHTML = '<div class="loading-indicator">Cargando información de productos...</div>';
+        // Intentar actualizar la información después de un segundo
+        setTimeout(updateProductsInfo, 1000);
+        return;
+    }
+
+    // Si hay un error general en la carga
+    if (window.filesInfo.generalError) {
+        contentDiv.innerHTML = `
+            <div class="info-section">
+                <div class="info-item error">
+                    <div class="file-name">Error al cargar los archivos</div>
+                    <div class="file-error">${window.filesInfo.generalError}</div>
+                </div>
+            </div>`;
+        return;
+    }
+
+    // Si no hay archivos
+    if (window.filesInfo.noFiles) {
+        contentDiv.innerHTML = `
+            <div class="info-section">
+                <div class="info-item">
+                    <div class="file-name">No se encontraron archivos de productos</div>
+                    <div class="file-details">No hay archivos CSV ni Google Sheets en la carpeta especificada.</div>
+                </div>
+            </div>`;
+        return;
+    }
+
+    // Generar HTML para los archivos cargados correctamente
+    let successfulFilesHtml = '';
+    if (window.filesInfo.successful.length > 0) {
+        window.filesInfo.successful.forEach(file => {
+            const time = file.timestamp ? new Date(file.timestamp).toLocaleTimeString() : '';
+            successfulFilesHtml += `
+                <div class="info-item success">
+                    <div class="file-name">${file.name}</div>
+                    <div class="file-details">
+                        Tipo: ${file.type} | 
+                        Productos cargados: ${file.productsLoaded} | 
+                        Hora: ${time}
+                    </div>
+                </div>`;
+        });
+    } else {
+        successfulFilesHtml = '<div class="info-item">No se cargó ningún archivo correctamente.</div>';
+    }
+
+    // Generar HTML para los archivos con errores
+    let failedFilesHtml = '';
+    if (window.filesInfo.failed.length > 0) {
+        window.filesInfo.failed.forEach(file => {
+            const time = file.timestamp ? new Date(file.timestamp).toLocaleTimeString() : '';
+            failedFilesHtml += `
+                <div class="info-item error">
+                    <div class="file-name">${file.name}</div>
+                    <div class="file-details">
+                        Tipo: ${file.type} | 
+                        Hora: ${time}
+                    </div>
+                    <div class="file-error">Error: ${file.reason}</div>
+                </div>`;
+        });
+    } else {
+        failedFilesHtml = '<div class="info-item">No hubo errores al cargar los archivos.</div>';
+    }
+
+    // Calcular tiempo de carga
+    let loadTime = '';
+    if (window.filesInfo.loadingTime && window.filesInfo.loadingFinished) {
+        const timeInMs = new Date(window.filesInfo.loadingFinished) - new Date(window.filesInfo.loadingTime);
+        loadTime = `(${(timeInMs / 1000).toFixed(2)} segundos)`;
+    }
+
+    // Actualizar el contenido del modal
+    contentDiv.innerHTML = `
+        <div class="products-info">
+            <div class="info-section">
+                <h3>Archivos Cargados Correctamente</h3>
+                ${successfulFilesHtml}
+            </div>
+            
+            <div class="info-section">
+                <h3>Archivos con Errores</h3>
+                ${failedFilesHtml}
+            </div>
+            
+            <div class="info-summary">
+                Total de archivos: ${window.filesInfo.totalFiles || 0} | 
+                Total de productos: ${window.filesInfo.totalProducts || 0} ${loadTime}
+            </div>
+        </div>`;
+}
+
+// Función para actualizar la información de productos en el modal
+function updateProductsInfo() {
+    if (document.getElementById('infoModal').style.display === 'block') {
+        showProductsInfoModal();
+    }
 }
 
 // Función para configurar elementos activos en la navbar
@@ -83,8 +239,17 @@ function setupNavbarActiveItems() {
     // Añadir event listeners para establecer el elemento activo
     menuItems.forEach(item => {
         item.addEventListener('click', function () {
+            // No activar el botón de información
+            if (this.id === 'navInfo' || this.id === 'navInfoMobile') {
+                return;
+            }
+
             // Eliminar la clase active de todos los elementos
-            menuItems.forEach(link => link.classList.remove('active'));
+            menuItems.forEach(link => {
+                if (link.id !== 'navInfo' && link.id !== 'navInfoMobile') {
+                    link.classList.remove('active');
+                }
+            });
 
             // Añadir la clase active al elemento clickeado
             this.classList.add('active');

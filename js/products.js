@@ -4,7 +4,13 @@
 // Variables globales
 let addedProducts = [];
 let manualIdCounter = 1;
-// Ahora todos los productos se cargan desde Google Drive
+// Información de archivos cargados
+window.filesInfo = {
+    successful: [],
+    failed: [],
+    totalProducts: 0,
+    loaded: false
+};
 
 // Configuración de Google Drive
 const FOLDER_ID = '1mYb3Wva5-EPc-pkj9e2GDqBzJv5bWhMc';
@@ -16,42 +22,17 @@ const MIME_TYPES = {
     GOOGLE_SHEET: 'application/vnd.google-apps.spreadsheet'
 };
 
-// Función para mostrar notificaciones
-function showNotification(message, isError = false) {
-    // Crear el elemento de notificación
-    const notification = document.createElement('div');
-    notification.className = `notification ${isError ? 'error' : 'success'}`;
-    notification.textContent = message;
-
-    // Buscar o crear el contenedor de notificaciones
-    let notificationContainer = document.getElementById('notificationContainer');
-    if (!notificationContainer) {
-        notificationContainer = document.createElement('div');
-        notificationContainer.id = 'notificationContainer';
-        notificationContainer.className = 'notification-container';
-        document.body.appendChild(notificationContainer);
-    }
-
-    // Añadir la notificación al contenedor
-    notificationContainer.appendChild(notification);
-
-    // Eliminar la notificación después de 5 segundos
-    setTimeout(() => {
-        notification.classList.add('fade-out');
-        setTimeout(() => {
-            notification.remove();
-            // Si no hay más notificaciones, eliminar el contenedor
-            if (notificationContainer.children.length === 0) {
-                notificationContainer.remove();
-            }
-        }, 500);
-    }, 5000);
-}
-
 // Función para cargar productos desde Google Drive
 async function loadProductsFromDrive() {
     try {
-        showNotification('Cargando archivos de productos desde Google Drive...');
+        // Restablecer información de archivos
+        window.filesInfo = {
+            successful: [],
+            failed: [],
+            totalProducts: 0,
+            loaded: false,
+            loadingTime: new Date()
+        };
 
         // Arrays para rastrear archivos cargados correctamente y fallidos
         const successfulFiles = [];
@@ -70,7 +51,9 @@ async function loadProductsFromDrive() {
 
         if (!lista.files || lista.files.length === 0) {
             console.warn('No se encontraron archivos CSV ni Google Sheets en la carpeta especificada.');
-            showNotification('No se encontraron archivos de datos en la carpeta especificada.', true);
+
+            window.filesInfo.loaded = true;
+            window.filesInfo.noFiles = true;
             return;
         }
 
@@ -87,10 +70,8 @@ async function loadProductsFromDrive() {
                 const isGoogleSheet = file.mimeType === MIME_TYPES.GOOGLE_SHEET;
 
                 if (isGoogleSheet) {
-                    showNotification(`Procesando Google Sheet: ${file.name}...`);
                     fileData = await fetchGoogleSheetData(file.id);
                 } else {
-                    showNotification(`Procesando CSV: ${file.name}...`);
                     const csvUrl = `https://www.googleapis.com/drive/v3/files/${file.id}?alt=media&key=${API_KEY}`;
                     const csvResponse = await fetch(csvUrl);
                     fileData = await csvResponse.text();
@@ -113,43 +94,58 @@ async function loadProductsFromDrive() {
                     filesLoaded++;
                     productsLoaded += addedInThisFile;
 
-                    successfulFiles.push({
+                    const fileInfo = {
                         name: file.name,
                         type: isGoogleSheet ? 'Google Sheet' : 'CSV',
-                        productsLoaded: addedInThisFile
-                    });
+                        productsLoaded: addedInThisFile,
+                        timestamp: new Date()
+                    };
 
-                    showNotification(`Archivo ${file.name} cargado: ${addedInThisFile} productos`);
+                    successfulFiles.push(fileInfo);
+                    window.filesInfo.successful.push(fileInfo);
                 } else {
-                    failedFiles.push({
+                    const fileError = {
                         name: file.name,
                         type: isGoogleSheet ? 'Google Sheet' : 'CSV',
-                        reason: parseResult.error
-                    });
+                        reason: parseResult.error,
+                        timestamp: new Date()
+                    };
 
-                    showNotification(`Error al cargar ${file.name}: ${parseResult.error}`, true);
+                    failedFiles.push(fileError);
+                    window.filesInfo.failed.push(fileError);
                 }
             } catch (error) {
                 console.error(`Error al procesar el archivo ${file.name}:`, error);
-                failedFiles.push({
+
+                const fileError = {
                     name: file.name,
                     type: file.mimeType === MIME_TYPES.GOOGLE_SHEET ? 'Google Sheet' : 'CSV',
-                    reason: error.message
-                });
+                    reason: error.message,
+                    timestamp: new Date()
+                };
 
-                showNotification(`Error al procesar ${file.name}: ${error.message}`, true);
+                failedFiles.push(fileError);
+                window.filesInfo.failed.push(fileError);
             }
         }
+
+        // Actualizar información global
+        window.filesInfo.totalProducts = Object.keys(window.productos).length;
+        window.filesInfo.totalFiles = successfulFiles.length + failedFiles.length;
+        window.filesInfo.loaded = true;
+        window.filesInfo.loadingFinished = new Date();
 
         // Mostrar en consola los archivos cargados correctamente y los fallidos
         console.log('📁 Archivos cargados correctamente:', successfulFiles);
         console.log('❌ Archivos con errores:', failedFiles);
 
         console.log(`Productos cargados: ${Object.keys(window.productos).length}`);
-        showNotification(`Carga completa: ${filesLoaded} archivos con ${productsLoaded} productos en total`);
     } catch (error) {
         console.error('Error al cargar los productos desde Google Drive:', error);
-        showNotification('Error al cargar los productos. Por favor, recarga la página o contacta al administrador.', true);
+
+        window.filesInfo.generalError = error.message;
+        window.filesInfo.loaded = true;
+
         alert('Error al cargar los productos. Por favor, recarga la página o contacta al administrador.');
     }
 }
@@ -196,7 +192,6 @@ function parseCSVAndLoadProducts(csvText, fileName) {
         if (codeIndex === -1 || descIndex === -1 || priceIndex === -1) {
             const error = `El archivo ${fileName} no tiene la estructura esperada (code, description, price).`;
             console.error(error);
-            showNotification(`Error: El archivo ${fileName} no tiene la estructura esperada.`, true);
             return { success: false, error: 'Estructura incorrecta' };
         }
 
@@ -237,18 +232,13 @@ function parseCSVAndLoadProducts(csvText, fileName) {
 
 // Inicialización de productos
 async function initializeProducts() {
-    showNotification('Iniciando carga de productos...');
-
     // Cargar productos desde Google Drive
     await loadProductsFromDrive();
 
     // Verificar que se hayan cargado productos
     if (typeof window.productos !== 'object' || Object.keys(window.productos).length === 0) {
         console.error('No se pudieron cargar los productos desde Google Drive.');
-        showNotification('No se pudieron cargar los productos. Por favor, recarga la página.', true);
         alert('Error: No se pudieron cargar los productos. Por favor, recarga la página.');
-    } else {
-        showNotification(`Aplicación lista - ${Object.keys(window.productos).length} productos disponibles`);
     }
 
     // Add product to the list (automatic)

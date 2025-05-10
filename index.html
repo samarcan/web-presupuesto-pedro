@@ -25,6 +25,7 @@
         <ul class="sidemenu-links">
             <li><a href="#" id="navSaveQuoteMobile"><i class="fas fa-save"></i> Guardar</a></li>
             <li><a href="#" id="navManageQuotesMobile"><i class="fas fa-folder"></i> Presupuestos</a></li>
+            <li><a href="#" id="navInfoMobile"><i class="fas fa-info-circle"></i> Información</a></li>
         </ul>
     </div>
 
@@ -41,6 +42,7 @@
             <ul class="navbar-menu">
                 <li><a href="#" id="navSaveQuote"><i class="fas fa-save"></i> Guardar</a></li>
                 <li><a href="#" id="navManageQuotes"><i class="fas fa-folder"></i> Presupuestos</a></li>
+                <li><a href="#" id="navInfo" class="info-button"><i class="fas fa-info-circle"></i></a></li>
             </ul>
             <!-- Botón de hamburguesa para móviles -->
             <button class="menu-toggle" id="menuToggle">
@@ -48,6 +50,21 @@
             </button>
         </div>
     </nav>
+
+    <!-- Modal de información -->
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Información de Productos</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="productsInfoContent">
+                    <div class="loading-indicator">Cargando información...</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="container">
         <!-- Paso 1: Añadir Productos -->
