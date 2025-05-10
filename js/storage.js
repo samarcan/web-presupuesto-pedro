@@ -1,6 +1,9 @@
 // Gestión de guardado y carga de presupuestos
 // Módulo para manejar el almacenamiento local de presupuestos
 
+// Variable para almacenar el nombre del presupuesto cargado actualmente
+let currentQuoteName = null;
+
 // Inicialización del gestor de almacenamiento
 function initializeStorage() {
     // Agregar event listeners a los botones existentes
@@ -28,6 +31,9 @@ function createNewQuote() {
 
     // Limpiar productos
     addedProducts.length = 0;
+
+    // Resetear el nombre del presupuesto actual
+    currentQuoteName = null;
 
     // Limpiar campos del cliente
     document.getElementById('clientName').value = '';
@@ -63,9 +69,13 @@ function saveQuote() {
     // Obtener presupuestos guardados
     const savedQuotes = JSON.parse(localStorage.getItem('savedQuotes')) || [];
 
-    // Pedir nombre para el presupuesto
-    let quoteName = prompt('Nombre para guardar el presupuesto:',
-        document.getElementById('clientName').value || 'Presupuesto ' + new Date().toLocaleDateString());
+    // Valor predeterminado para el nombre: usar el nombre actual si existe, o el nombre del cliente, o un nombre genérico
+    const defaultName = currentQuoteName ||
+        document.getElementById('clientName').value ||
+        'Presupuesto ' + new Date().toLocaleDateString();
+
+    // Pedir nombre para el presupuesto, usando el nombre actual como predeterminado
+    let quoteName = prompt('Nombre para guardar el presupuesto:', defaultName);
 
     if (!quoteName) return; // El usuario canceló
 
@@ -91,6 +101,9 @@ function saveQuote() {
         savedQuotes.splice(existingQuoteIndex, 1);
     }
 
+    // Actualizar el nombre del presupuesto actual
+    currentQuoteName = quoteName;
+
     // Crear objeto con los datos del presupuesto
     const quoteData = {
         id: Date.now(), // ID único basado en timestamp
@@ -111,6 +124,11 @@ function saveQuote() {
     localStorage.setItem('savedQuotes', JSON.stringify(savedQuotes));
 
     alert(`Presupuesto "${quoteName}" guardado correctamente en este dispositivo. Esta información solo estará disponible en este navegador.`);
+
+    // Mostrar notificación
+    if (typeof showNotification === 'function') {
+        showNotification(`Presupuesto "${quoteName}" guardado correctamente`);
+    }
 }
 
 // Mostrar diálogo para cargar un presupuesto
@@ -222,6 +240,9 @@ function loadQuote(quoteId) {
         }
     }
 
+    // Guardar el nombre del presupuesto para usarlo luego
+    currentQuoteName = quote.name;
+
     // Cargar productos (limpiar primero el array existente)
     addedProducts.length = 0; // Vaciar el array sin crear uno nuevo
 
@@ -237,7 +258,12 @@ function loadQuote(quoteId) {
     // Actualizar UI
     updateProductsList();
 
-    alert(`Presupuesto "${quote.name}" cargado correctamente`);
+    // Mostrar notificación
+    if (typeof showNotification === 'function') {
+        showNotification(`Presupuesto "${quote.name}" cargado correctamente`);
+    } else {
+        alert(`Presupuesto "${quote.name}" cargado correctamente`);
+    }
 }
 
 // Abrir diálogo para gestionar presupuestos guardados
