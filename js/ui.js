@@ -334,6 +334,11 @@ function updateProductsList() {
             // Aplicar ajuste de altura en eventos
             textarea.addEventListener('input', adjustHeight);
 
+            // Evitar que el click en el textarea se propague al span padre
+            textarea.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+
             // Agregar botones para guardar y cancelar
             const buttonsContainer = document.createElement('div');
             buttonsContainer.className = 'edit-buttons-container';
